@@ -1,54 +1,348 @@
-{% extends 'layout.html' %} {% block body %}
-
+{% extends 'layout.html' %}
+{% block body %}
 
 <style>
-  html body {
-    background-color: rgb(206, 206, 228);
+  /* General Body Styles */
+  html, body {
+    background-color: #f2f7ed; /* Light green-beige for a natural feel */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern, readable font */
+    color: #333; /* Darker text for readability */
+    line-height: 1.6;
+  }
+
+  /* Main Container Styles */
+  .main-container {
+    width: 90%; /* Responsive width */
+    max-width: 600px; /* Max width for larger screens */
+    margin: 40px auto; /* Centering with more vertical space */
+    background: #fff;
+    border-radius: 20px; /* Slightly softer corners */
+    padding: 35px; /* Increased padding */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Softer, more pronounced shadow */
+    border: 1px solid #e0e0e0; /* Subtle border */
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .main-container:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+  }
+
+  /* Title Styles */
+  h2.title {
+    text-align: center;
+    margin-top: 20px; /* Adjusted margin */
+    margin-bottom: 30px;
+    color: #28a745; /* Green for "plant" related themes */
+    font-size: 2.2rem; /* Larger font for prominence */
+    font-weight: 700; /* Bolder */
+    display: flex; /* For aligning icon and text */
+    justify-content: center;
+    align-items: center;
+  }
+
+  h2.title .icon {
+    margin-right: 15px; /* Space between icon and text */
+    font-size: 2.5rem; /* Icon size */
+    color: #4CAF50; /* Green icon */
+  }
+
+  /* Introduction Text */
+  .intro-text {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #555;
+    font-size: 1.1rem;
+    padding: 0 15px;
+  }
+
+  /* Form Labels */
+  .form-label {
+    font-size: 1.1rem; /* Slightly larger label */
+    margin-bottom: 12px;
+    display: block; /* Ensures it takes full width */
+    font-weight: 600; /* Bolder label */
+    color: #333;
+  }
+
+  /* File Input Styles */
+  .form-control-file {
+    display: block;
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 25px; /* More space below input */
+    font-size: 1rem;
+    color: #495057;
+    background-color: #f8f9fa;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    cursor: pointer;
+  }
+
+  .form-control-file:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+
+  /* Output Image Styles */
+  #output-image {
+    max-width: 100%;
+    height: auto;
+    display: none;
+    margin-top: 20px; /* More space above image */
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Softer shadow for image */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    border: 1px solid #ddd; /* Light border around image */
+  }
+
+  #output-image.visible {
+    opacity: 1;
+  }
+
+  #output-image:hover {
+    transform: scale(1.02);
+  }
+
+  /* Predict Button Styles */
+  .btn-predict {
+    margin-top: 30px; /* More space above button */
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 12px 30px; /* Larger padding for a bigger button */
+    border-radius: 25px; /* Pill-shaped button */
+    background-color: #28a745; /* Green button */
+    border-color: #28a745;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3); /* Green shadow */
+  }
+
+  .btn-predict:hover {
+    background-color: #218838; /* Darker green on hover */
+    border-color: #1e7e34;
+    transform: translateY(-2px); /* Slight lift on hover */
+  }
+
+  .btn-predict:active {
+    transform: translateY(0); /* Press down effect */
+  }
+
+  /* Loading Spinner Styles */
+  #loadingSpinner {
+    display: none;
+    margin-top: 25px;
+    width: 3rem; /* Larger spinner */
+    height: 3rem;
+    border-width: .3em; /* Thicker spinner border */
+    color: #28a745; /* Green spinner */
+  }
+
+  /* Information Section */
+  .info-section {
+    width: 90%;
+    max-width: 600px;
+    margin: 40px auto;
+    background: #e9f5e1; /* Light green background */
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid #d4edda;
+  }
+
+  .info-section h3 {
+    color: #28a745;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+
+  .info-section p {
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 1rem;
+  }
+
+  .info-section ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .info-section ul li {
+    background-color: #f3faf1;
+    margin-bottom: 10px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border-left: 5px solid #4CAF50;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+  }
+
+  .info-section ul li i {
+    margin-right: 15px;
+    color: #4CAF50;
+    font-size: 1.2rem;
+  }
+
+  .info-section .contact-info {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px dashed #ccc;
+  }
+
+  .info-section .contact-info a {
+    color: #28a745;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .info-section .contact-info a:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .main-container, .info-section {
+      margin: 20px auto;
+      padding: 25px;
+    }
+
+    h2.title {
+      font-size: 1.8rem;
+    }
+
+    h2.title .icon {
+      font-size: 2rem;
+    }
+
+    .btn-predict {
+      font-size: 1rem;
+      padding: 10px 25px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .main-container, .info-section {
+      width: 95%;
+      margin: 15px auto;
+      padding: 20px;
+    }
+
+    h2.title {
+      font-size: 1.5rem;
+      flex-direction: column; /* Stack icon and text on small screens */
+    }
+
+    h2.title .icon {
+      margin-right: 0;
+      margin-bottom: 10px; /* Space when stacked */
+    }
+
+    .intro-text {
+      font-size: 0.95rem;
+    }
+
+    .form-label {
+      font-size: 1rem;
+    }
+
+    .form-control-file {
+      padding: 10px;
+    }
+
+    .btn-predict {
+      width: 100%; /* Full width button on small screens */
+      padding: 10px;
+    }
   }
 </style>
-<br /><br />
-  <h2 style="text-align: center; margin: 0px; color: black">
-    <b>Find out which disease has been caught by your plant</b>
-  </h2>
-  <br />
-  <br>
 
-<div style="
-    width: 350px;
-    height: 50rem;
-    margin: 0px auto;
-    color: black;
-    border-radius: 25px;
-    padding: 10px 10px;
-    font-weight: bold;
-  ">
-
-  
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
-  <form class="form-signin" method=post enctype=multipart/form-data>
+<h2 class="title">
+  <i class="fas fa-seedling icon"></i> <b>Plant Disease Predictor</b>
+</h2>
 
-    <h2 class="h4 mb-3 font-weight-normal"><b>Please Upload The Image</b></h2>
-    <input type="file" name="file" class="form-control-file" id="inputfile" onchange="preview_image(event)" style="font-weight: bold;">
-    <br>
-    <br>
-    <img id="output-image" class="rounded mx-auto d-block" />
-    <button class="btn btn-lg btn-primary btn-block" type="submit" style="font-weight: bold;">Predict</button>
+<div class="intro-text">
+  <p>Upload a clear image of your plant's affected leaf, and our system will help identify potential diseases using advanced AI.</p>
+  <p>Get quick insights to help you take timely action and protect your crops!</p>
+</div>
 
+<div class="main-container">
+  <form class="form-signin" method="POST" enctype="multipart/form-data" onsubmit="showSpinner()">
+    <label class="form-label" for="inputfile"><i class="fas fa-camera"></i> Upload Plant Leaf Image</label>
+    <input type="file" name="file" class="form-control-file" id="inputfile" onchange="previewImage(event)" accept="image/*" required>
 
+    <img id="output-image" class="rounded mx-auto d-block" alt="Image Preview" />
+
+    <div class="text-center">
+      <button class="btn btn-primary btn-block btn-predict" type="submit">Predict Disease</button>
+      <div class="spinner-border text-primary" role="status" id="loadingSpinner">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
   </form>
 </div>
 
-<script type="text/javascript">
-  function preview_image(event) {
-    var reader = new FileReader();
-    reader.onload = function () {
-      var output = document.getElementById('output-image')
-      output.src = reader.result;
+<div class="info-section">
+  <h3><i class="fas fa-info-circle"></i> Why Use Our System?</h3>
+  <p>Our Plant Disease Prediction System leverages machine learning to provide rapid and accurate diagnosis of common crop diseases. By identifying diseases early, you can:</p>
+  <ul>
+    <li><i class="fas fa-check-circle"></i> Minimize crop loss and maximize yield.</li>
+    <li><i class="fas fa-check-circle"></i> Reduce the need for broad-spectrum pesticides.</li>
+    <li><i class="fas fa-check-circle"></i> Implement targeted treatments effectively.</li>
+    <li><i class="fas fa-check-circle"></i> Contribute to sustainable agriculture practices.</li>
+  </ul>
+  <div class="contact-info">
+    <p>Need help or have questions? <a href="#">Contact Us</a> or visit our <a href="#">FAQ</a>.</p>
+  </div>
+</div>
+
+
+<script>
+  function previewImage(event) {
+    const output = document.getElementById('output-image');
+    if (event.target.files && event.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        output.src = reader.result;
+        output.style.display = 'block';
+        output.classList.add('visible'); // Add class for animation
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    } else {
+      output.src = '';
+      output.style.display = 'none';
+      output.classList.remove('visible');
     }
-    reader.readAsDataURL(event.target.files[0]);
   }
+
+  function showSpinner() {
+    // Only show spinner if an image is selected
+    const inputFile = document.getElementById('inputfile');
+    if (inputFile.files && inputFile.files[0]) {
+      document.getElementById('loadingSpinner').style.display = 'inline-block';
+      // Optionally disable the button to prevent multiple submissions
+      document.querySelector('.btn-predict').disabled = true;
+    } else {
+      // Prevent form submission if no file is selected (though 'required' attribute should handle this)
+      event.preventDefault();
+      alert('Please upload an image before predicting.');
+    }
+  }
+
+  // Optional: Hide spinner and re-enable button if prediction fails or page reloads
+  // You might need server-side logic to handle this for true feedback
+  window.onload = function() {
+    document.getElementById('loadingSpinner').style.display = 'none';
+    document.querySelector('.btn-predict').disabled = false;
+  };
 </script>
 
-</div>
 {% endblock %}
