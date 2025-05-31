@@ -1,17 +1,329 @@
-{% extends 'layout.html' %} {% block body %}
+{% extends 'layout.html' %}
+{% block body %}
+
+<style>
+  /* General Body Styles */
+  html, body {
+    background-color: #f2f7ed; /* Light green-beige for a natural feel */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern, readable font */
+    color: #333; /* Darker text for readability */
+    line-height: 1.6;
+    display: flex; /* Use flexbox for vertical centering */
+    flex-direction: column;
+    min-height: 100vh; /* Ensure body takes full viewport height */
+    margin: 0;
+  }
+
+  /* Main Content Wrapper for Vertical Centering */
+  .main-content-wrapper {
+    flex-grow: 1; /* Allows it to take available space */
+    display: flex;
+    align-items: center; /* Vertically center content */
+    justify-content: center; /* Horizontally center content */
+    padding: 20px; /* Add some padding for smaller screens */
+  }
+
+  /* Result Card Styles */
+  .result-card {
+    background-color: #d4edda; /* A pleasant, slightly deeper green */
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* More pronounced shadow */
+    border: 1px solid #c3e6cb; /* Slightly darker border for contrast */
+    text-align: center; /* Center content within the card */
+    max-width: 800px;
+    width: 90%;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition */
+  }
+
+  .result-card:hover {
+    transform: translateY(-8px); /* More noticeable lift on hover */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+  }
+
+  /* Main Heading within the card (e.g., "Fertilizer Recommendation") */
+  .result-card h2.card-title {
+    color: #155724; /* Darker green for strong contrast */
+    font-size: 2.2rem;
+    font-weight: 800; /* Extra bold */
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .result-card h2.card-title i {
+    margin-right: 15px;
+    font-size: 2.5rem;
+    color: #28a745;
+  }
+
+  /* Soil Status Message Styling (e.g., "The K value of your soil is high.") */
+  .soil-status-display { /* Using this class for the extracted message */
+    font-size: 1.8rem; /* Very prominent */
+    font-weight: 800; /* Super bold */
+    color: #333; /* Dark text for contrast */
+    margin-bottom: 20px; /* Space below this message */
+    line-height: 1.3;
+  }
+
+  .soil-status-display .status-word {
+    display: inline-block; /* Essential for animation */
+    padding: 0 10px; /* Padding around the word */
+    border-radius: 8px; /* Rounded background */
+    font-weight: 900; /* Even bolder */
+    text-transform: uppercase; /* Make it uppercase for emphasis */
+    animation: pulse 1.5s infinite alternate; /* Apply pulse animation */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Subtle shadow */
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  }
+
+  /* Specific colors for status words */
+  .soil-status-display .status-word.high {
+    background-color: #dc3545; /* Red for high */
+    color: white;
+  }
+  .soil-status-display .status-word.low {
+    background-color: #ffc107; /* Orange/Yellow for low */
+    color: #333;
+  }
+  .soil-status-display .status-word.optimal {
+    background-color: #28a745; /* Green for optimal */
+    color: white;
+  }
+  .soil-status-display .status-word.unspecified { /* Fallback for unexpected status */
+    background-color: #6c757d; /* Grey */
+    color: white;
+  }
+
+  /* Pulse Animation */
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.05); opacity: 0.85; }
+  }
 
 
+  /* Sub-heading for suggestions ("Please consider...") */
+  .suggestion-intro-display { /* Using this class for the extracted intro */
+    font-size: 1.2rem;
+    font-weight: 700; /* Explicitly bold */
+    color: #444;
+    margin-bottom: 20px;
+    text-align: center;
+  }
 
 
+  /* Recommendation List Content Styles (the numbered list) */
+  .recommendation-content {
+    color: #333; /* Darker text for readability */
+    font-size: 1.15rem;
+    line-height: 1.8;
+    text-align: left; /* Align text left within the card */
+    white-space: pre-wrap; /* Preserve whitespace, including newlines and formatting */
+    padding: 10px 0;
+  }
 
+  /* Call to Action/Information Section */
+  .info-section {
+    width: 90%;
+    max-width: 600px;
+    margin: 40px auto;
+    background: #e9f5e1;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid #d4edda;
+    text-align: center;
+  }
 
-<div class="container py-2 mx-auto my-50 h-10 " style="margin: 9rem;">
-  <div class="row">
-      <div class="col-sm py-2 py-md-3">
-          <div class="card card-body" style="justify-content: center; background-color:blanchedalmond">
-               <p class="text-center" style="color: black; font-size: 20px;">{{ recommendation }}</p>
-          </div>
-      </div>
+  .info-section h3 {
+    color: #28a745;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+
+  .info-section p {
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 1rem;
+  }
+
+  .info-section .btn-return {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+  }
+
+  .info-section .btn-return:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .result-card {
+      padding: 30px;
+    }
+    .result-card h2.card-title {
+      font-size: 1.8rem;
+    }
+    .result-card h2.card-title i {
+      font-size: 2rem;
+    }
+    .soil-status-display {
+      font-size: 1.5rem;
+    }
+    .soil-status-display .status-word {
+      padding: 0 8px;
+    }
+    .suggestion-intro-display {
+      font-size: 1.1rem;
+    }
+    .recommendation-content {
+      font-size: 1.05rem;
+    }
+    .info-section {
+      padding: 25px;
+    }
+    .info-section h3 {
+      font-size: 1.6rem;
+    }
+    .info-section .btn-return {
+      font-size: 1rem;
+      padding: 10px 25px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .result-card {
+      padding: 25px;
+    }
+    .result-card h2.card-title {
+      font-size: 1.5rem;
+      flex-direction: column;
+    }
+    .result-card h2.card-title i {
+      margin-right: 0;
+      margin-bottom: 10px;
+      font-size: 1.8rem;
+    }
+    .soil-status-display {
+      font-size: 1.3rem;
+    }
+    .soil-status-display .status-word {
+      padding: 0 5px;
+    }
+    .suggestion-intro-display {
+      font-size: 1rem;
+    }
+    .recommendation-content {
+      font-size: 0.95rem;
+    }
+    .info-section {
+      padding: 20px;
+    }
+  }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<div class="main-content-wrapper">
+  <div class="result-card">
+    <h2 class="card-title">
+      <i class="fas fa-flask"></i> Fertilizer Recommendation
+    </h2>
+
+    <div class="soil-status-display" id="soilStatusDisplay">
+      Loading Recommendation...
+    </div>
+
+    <p class="suggestion-intro-display" id="suggestionIntroDisplay">
+      </p>
+
+    <div class="recommendation-content" id="recommendationContentRaw">
+      {{ recommendation }}
+    </div>
   </div>
 </div>
+
+<div class="info-section">
+  <h3><i class="fas fa-lightbulb"></i> Actionable Insights for Your Farm!</h3>
+  <p>This recommendation provides specific steps to balance your soil's nutrient levels. Implementing these suggestions can significantly improve your crop's health and overall yield.</p>
+  <p>For long-term soil health, consider consistent monitoring and consulting with local agricultural experts.</p>
+  <a href="{{ url_for('fertilizer_recommendation') }}" class="btn-return"><i class="fas fa-redo-alt"></i> Get Another Recommendation</a>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const rawRecommendationDiv = document.getElementById('recommendationContentRaw');
+    const fullRecommendationText = rawRecommendationDiv.innerText.trim();
+
+    const lines = fullRecommendationText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+
+    let soilStatusMessage = '';
+    let suggestionIntro = '';
+    let recommendationDetails = '';
+
+    if (lines.length > 0) {
+      soilStatusMessage = lines[0]; // First line is soil status
+
+      if (lines.length > 1 && lines[1].toLowerCase().includes("consider the following suggestions")) {
+        suggestionIntro = lines[1]; // Second line is suggestion intro
+        recommendationDetails = lines.slice(2).join('\n'); // Rest are details
+      } else {
+        // If "Please consider..." is not the second line, assume first line is status and rest are details
+        recommendationDetails = lines.slice(1).join('\n');
+      }
+    }
+
+    // --- Populate and Animate Soil Status ---
+    const soilStatusDisplayDiv = document.getElementById('soilStatusDisplay');
+    let animatedHtml = soilStatusMessage;
+    let statusFound = false;
+
+    // Keywords to look for
+    const statusKeywords = {
+      high: ['high'],
+      low: ['low'],
+      optimal: ['optimal', 'good', 'ideal', 'balanced']
+    };
+
+    // Regex to find and wrap status words
+    for (const statusType in statusKeywords) {
+      statusKeywords[statusType].forEach(keyword => {
+        const regex = new RegExp(`\\b(${keyword})\\b`, 'gi'); // \b for whole word
+        if (animatedHtml.toLowerCase().includes(keyword)) {
+          animatedHtml = animatedHtml.replace(regex, `<span class="status-word ${statusType}">$1</span>`);
+          statusFound = true;
+        }
+      });
+    }
+
+    // If no specific status word was found, use a default style
+    if (!statusFound) {
+      animatedHtml = `<span class="status-word unspecified">${soilStatusMessage}</span>`;
+    }
+
+    soilStatusDisplayDiv.innerHTML = animatedHtml;
+
+    // --- Populate Suggestion Intro ---
+    const suggestionIntroDisplayP = document.getElementById('suggestionIntroDisplay');
+    suggestionIntroDisplayP.innerText = suggestionIntro;
+
+    // --- Populate Recommendation Details ---
+    recommendationTextDiv.innerText = recommendationDetails; // Update the original div's content
+  });
+</script>
+
 {% endblock %}

@@ -212,7 +212,6 @@ def fert_recommend():
     N = int(request.form['nitrogen'])
     P = int(request.form['phosphorous'])
     K = int(request.form['pottasium'])
-
     df = pd.read_csv('Data/fertilizer.csv')
     nr, pr, kr = df[df['Crop'] == crop_name][['N', 'P', 'K']].iloc[0]
 
@@ -231,7 +230,6 @@ def fert_recommend():
 
     recommendation = Markup(fertilizer_dic[key])
     return render_template('fertilizer-result.html', recommendation=recommendation, title='Fertilizer Suggestion')
-
 @app.route('/disease-predict', methods=['GET', 'POST'])
 def disease_prediction():
     title = 'Disease Detection'

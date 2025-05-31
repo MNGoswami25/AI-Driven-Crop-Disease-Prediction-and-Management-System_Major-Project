@@ -1,19 +1,184 @@
-{% extends 'layout.html' %} {% block body %}
+{% extends 'layout.html' %}
+{% block body %}
 
 <style>
-  .mt-0 {
-  margin-top: 50 !important;
-}
+  /* General Body Styles */
+  html, body {
+    background-color: #f2f7ed; /* Light green-beige for a natural feel */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern, readable font */
+    color: #333; /* Darker text for readability */
+    line-height: 1.6;
+    display: flex; /* Use flexbox for vertical centering */
+    flex-direction: column;
+    min-height: 100vh; /* Ensure body takes full viewport height */
+    margin: 0;
+  }
+
+  /* Main Content Wrapper for Vertical Centering */
+  .main-content-wrapper {
+    flex-grow: 1; /* Allows it to take available space */
+    display: flex;
+    align-items: center; /* Vertically center content */
+    justify-content: center; /* Horizontally center content */
+    padding: 20px; /* Add some padding for smaller screens */
+  }
+
+  /* Result Card Styles */
+  .result-card {
+    background-color: #ffffff; /* White card background */
+    border-radius: 20px; /* Rounded corners */
+    padding: 40px; /* Generous padding */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Soft, pronounced shadow */
+    border: 1px solid #e0e0e0; /* Subtle border */
+    text-align: center; /* Center text inside the card */
+    max-width: 700px; /* Max width for larger screens */
+    width: 90%; /* Responsive width */
+    transition: transform 0.3s ease-in-out; /* Smooth transition for hover */
+  }
+
+  .result-card:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+  }
+
+  /* Heading Styles */
+  .result-card h1 {
+    color: #28a745; /* Green color for the main message */
+    font-size: 2.5rem; /* Larger font size for impact */
+    font-weight: 700; /* Bolder text */
+    margin-bottom: 20px; /* Space below the heading */
+    display: flex; /* For aligning icon and text */
+    justify-content: center;
+    align-items: center;
+    line-height: 1.3; /* Adjust line height for better readability */
+  }
+
+  .result-card h1 i {
+    margin-right: 15px; /* Space between icon and text */
+    font-size: 3rem; /* Larger icon size */
+    color: #4CAF50; /* Green icon color */
+  }
+
+  .result-card h1 i.fa-seedling {
+    font-size: 2.8rem; /* Slightly smaller for seedling icon */
+  }
+
+  /* Italicized Prediction Text */
+  .result-card h1 i {
+    font-style: italic; /* Ensure the prediction text is italic */
+  }
+
+  /* Call to Action/Information Section */
+  .info-section {
+    width: 90%;
+    max-width: 600px;
+    margin: 40px auto;
+    background: #e9f5e1; /* Light green background */
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid #d4edda;
+    text-align: center;
+  }
+
+  .info-section h3 {
+    color: #28a745;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+
+  .info-section p {
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 1rem;
+  }
+
+  .info-section .btn-return {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff; /* Blue for action button */
+    border: none;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+  }
+
+  .info-section .btn-return:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .result-card {
+      padding: 30px;
+    }
+
+    .result-card h1 {
+      font-size: 2rem;
+    }
+
+    .result-card h1 i {
+      font-size: 2.5rem;
+    }
+
+    .info-section {
+      padding: 25px;
+    }
+
+    .info-section h3 {
+      font-size: 1.6rem;
+    }
+
+    .info-section .btn-return {
+      font-size: 1rem;
+      padding: 10px 25px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .result-card {
+      padding: 25px;
+    }
+
+    .result-card h1 {
+      font-size: 1.8rem;
+      flex-direction: column; /* Stack icon and text on small screens */
+    }
+
+    .result-card h1 i {
+      margin-right: 0;
+      margin-bottom: 10px; /* Space when stacked */
+      font-size: 2rem;
+    }
+
+    .info-section {
+      padding: 20px;
+    }
+  }
 </style>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-<div class="container py-2 mx-auto my-50 h-10 " style="margin: 12rem;">
-  <div class="row">
-      <div class="col-sm py-2 py-md-3">
-          <div class="card card-body" style="justify-content: center;">
-               <h1 class="text-center"><b>You should grow <i>{{ prediction }} </i>in your farm</b></h1>
-          </div>
-      </div>
+<div class="main-content-wrapper">
+  <div class="result-card">
+    <h1>
+      <i class="fas fa-seedling"></i> You should grow <i>{{ prediction }}</i> in your farm!
+    </h1>
   </div>
 </div>
+
+<div class="info-section">
+  <h3><i class="fas fa-check-circle"></i> Prediction Complete!</h3>
+  <p>Based on your input, <b>{{ prediction }}</b> is the most suitable crop for your farm. We hope this recommendation helps you achieve a successful harvest!</p>
+  <p>Remember that local conditions and best farming practices are also crucial for optimal growth.</p>
+  <a href="{{ url_for('crop_recommend') }}" class="btn-return"><i class="fas fa-redo-alt"></i> Predict Another Crop</a>
+</div>
+
 {% endblock %}
