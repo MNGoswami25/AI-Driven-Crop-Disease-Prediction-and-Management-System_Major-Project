@@ -1,93 +1,310 @@
-{% extends 'layout.html' %} {% block body %}
+{% extends 'layout.html' %}
+{% block body %}
 
 <style>
-  html body {
-    background-color: rgb(206, 206, 228);
+  /* General Body Styles */
+  html, body {
+    background-color: #f2f7ed; /* Light green-beige for a natural feel */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern, readable font */
+    color: #333; /* Darker text for readability */
+    line-height: 1.6;
+  }
+
+  /* Main Title Styles */
+  h2.title {
+    text-align: center;
+    margin-top: 40px; /* More space from top */
+    margin-bottom: 30px;
+    color: #28a745; /* Green for "plant" related themes */
+    font-size: 2.2rem; /* Larger font for prominence */
+    font-weight: 700; /* Bolder */
+    display: flex; /* For aligning icon and text */
+    justify-content: center;
+    align-items: center;
+  }
+
+  h2.title .icon {
+    margin-right: 15px; /* Space between icon and text */
+    font-size: 2.5rem; /* Icon size */
+    color: #4CAF50; /* Green icon */
+  }
+
+  /* Introduction Text */
+  .intro-text {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #555;
+    font-size: 1.1rem;
+    padding: 0 15px;
+    max-width: 700px; /* Limit width for readability */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Main Container Styles (Form) */
+  .main-container {
+    width: 90%; /* Responsive width */
+    max-width: 500px; /* Max width for larger screens */
+    margin: 30px auto; /* Centering with vertical space */
+    background: #fff;
+    border-radius: 20px; /* Softer corners */
+    padding: 35px; /* Increased padding */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Softer, more pronounced shadow */
+    border: 1px solid #e0e0e0; /* Subtle border */
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .main-container:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+  }
+
+  /* Form Labels */
+  .form-group label {
+    font-size: 1.1rem; /* Slightly larger label */
+    margin-bottom: 8px; /* Space below label */
+    display: block; /* Ensures it takes full width */
+    font-weight: 600; /* Bolder label */
+    color: #333;
+  }
+
+  /* Input and Select Fields */
+  .form-control {
+    display: block;
+    width: 100%;
+    padding: 15px 20px;
+    margin-bottom: 25px; /* More space below input */
+    font-size: 1rem;
+    color: #495057;
+    background-color: #f8f9fa; /* Light background for inputs */
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 10px; /* Rounded corners for inputs */
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    font-weight: normal; /* Override inline bold */
+  }
+
+  .form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+
+  /* Placeholder Text */
+  .form-control::placeholder {
+    color: #a0a0a0;
+    font-weight: normal;
+  }
+
+  /* Predict Button Styles */
+  .btn-predict {
+    margin-top: 30px; /* More space above button */
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 12px 30px; /* Larger padding for a bigger button */
+    border-radius: 25px; /* Pill-shaped button */
+    background-color: #28a745; /* Green button */
+    border-color: #28a745;
+    color: white; /* White text for contrast */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3); /* Green shadow */
+  }
+
+  .btn-predict:hover {
+    background-color: #218838; /* Darker green on hover */
+    border-color: #1e7e34;
+    transform: translateY(-2px); /* Slight lift on hover */
+    box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4); /* More pronounced shadow */
+  }
+
+  .btn-predict:active {
+    transform: translateY(0); /* Press down effect */
+    box-shadow: 0 2px 5px rgba(40, 167, 69, 0.3);
+  }
+
+  /* Information Section (Optional, can be removed or expanded) */
+  .info-section {
+    width: 90%;
+    max-width: 600px;
+    margin: 40px auto;
+    background: #e9f5e1; /* Light green background */
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid #d4edda;
+  }
+
+  .info-section h3 {
+    color: #28a745;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+
+  .info-section p {
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 1rem;
+  }
+
+  .info-section ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .info-section ul li {
+    background-color: #f3faf1;
+    margin-bottom: 10px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border-left: 5px solid #4CAF50;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+  }
+
+  .info-section ul li i {
+    margin-right: 15px;
+    color: #4CAF50;
+    font-size: 1.2rem;
+  }
+
+  .info-section .contact-info {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px dashed #ccc;
+  }
+
+  .info-section .contact-info a {
+    color: #28a745;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .info-section .contact-info a:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .main-container, .info-section {
+      margin: 25px auto;
+      padding: 25px;
+    }
+
+    h2.title {
+      font-size: 1.8rem;
+    }
+
+    h2.title .icon {
+      font-size: 2rem;
+    }
+
+    .intro-text {
+      font-size: 1rem;
+    }
+
+    .btn-predict {
+      font-size: 1rem;
+      padding: 10px 25px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .main-container, .info-section {
+      width: 95%;
+      margin: 15px auto;
+      padding: 20px;
+    }
+
+    h2.title {
+      font-size: 1.5rem;
+      flex-direction: column; /* Stack icon and text on small screens */
+      text-align: center;
+    }
+
+    h2.title .icon {
+      margin-right: 0;
+      margin-bottom: 10px; /* Space when stacked */
+    }
+
+    .intro-text {
+      font-size: 0.95rem;
+    }
+
+    .form-group label {
+      font-size: 1rem;
+    }
+
+    .form-control {
+      padding: 10px;
+    }
+
+    .btn-predict {
+      width: 100%; /* Full width button on small screens */
+      padding: 10px;
+    }
   }
 </style>
-<!--Form Section-->
-<br /><br />
-<h2 style="text-align: center; margin: 0px; color: black">
-  <b>Get informed advice on fertilizer based on soil</b>
-</h2>
-<br />
 
-<div
-  style="
-    width: 350px;
-    height: 40rem;
-    margin: 0px auto;
-    color: black;
-    border-radius: 25px;
-    padding: 10px 10px;
-  "
->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+<h2 class="title">
+  <i class="fas fa-flask icon"></i> <b>Smart Fertilizer Recommendation</b>
+</h2>
+
+<div class="intro-text">
+  <p>Get personalized advice on the best fertilizer for your soil! Input the nitrogen, phosphorus, and potassium levels of your soil along with your desired crop, and we'll recommend the ideal nutrients.</p>
+</div>
+
+<div class="main-container">
   <form method="POST" action="{{ url_for('fert_recommend') }}">
     <div class="form-group">
-      <label for="Nitrogen" style="font-size: 17px"><b>Nitrogen</b></label>
+      <label for="Nitrogen"><i class="fas fa-vial"></i> Nitrogen (N)</label>
       <input
         type="number"
         class="form-control"
         id="Nitrogen"
         name="nitrogen"
-        placeholder="Enter the value (example:50)"
-        style="font-weight: bold"
+        placeholder="e.g., 50"
         required
       />
     </div>
     <div class="form-group">
-      <label for="Phosphorous" style="font-size: 17px"
-        ><b>Phosphorous</b></label
-      >
+      <label for="Phosphorous"><i class="fas fa-vial"></i> Phosphorous (P)</label>
       <input
         type="number"
         class="form-control"
         id="Phosphorous"
         name="phosphorous"
-        placeholder="Enter the value (example:50)"
-        style="font-weight: bold"
+        placeholder="e.g., 50"
         required
       />
     </div>
 
     <div class="form-group">
-      <label for="Pottasium" style="font-size: 17px"><b>Pottasium</b></label>
+      <label for="Pottasium"><i class="fas fa-vial"></i> Potassium (K)</label>
       <input
         type="number"
         class="form-control"
         id="Pottasium"
         name="pottasium"
-        placeholder="Enter the value (example:50)"
-        style="font-weight: bold"
+        placeholder="e.g., 50"
         required
       />
     </div>
-    <!-- <div class="form-group">
-      <label for="ph" style="font-size: 17px"><b>ph level</b></label>
-      <input
-        type="text"
-        class="form-control"
-        id="ph"
-        name="ph"
-        placeholder="Enter the value"
-        style="font-weight: bold"
-        required
-      />
-    </div> -->
     <div class="form-group">
-      <label for="crop" style="font-size: 17px"
-        ><b>Crop you want to grow</b></label
-      >
+      <label for="crop"><i class="fas fa-seedling"></i> Crop you want to grow</label>
       <select
         name="cropname"
         class="form-control"
         id="crop"
-        placeholder="Select a crop"
-        style="font-weight: bold"
         required
       >
-        <option selected>Select crop</option>
-        <option>rice</option>
+        <option value="" disabled selected>Select a crop</option> <option>rice</option>
         <option>maize</option>
         <option>chickpea</option>
         <option>kidneybeans</option>
@@ -112,22 +329,28 @@
       </select>
     </div>
 
-    <div class="d-flex justify-content-center">
-      <button
+    <div class="text-center"> <button
         type="submit"
-        class="btn btn-info"
-        style="
-          color: black;
-          font-weight: bold;
-          width: 130px;
-          height: 50px;
-          border-radius: 12px;
-          font-size: 21px;
-        "
+        class="btn btn-predict"
       >
         Predict
       </button>
     </div>
   </form>
 </div>
+
+<div class="info-section">
+  <h3><i class="fas fa-lightbulb"></i> Benefits of Soil Testing</h3>
+  <p>Understanding your soil's nutrient profile is crucial for healthy plant growth and optimal yield. Our system helps you by:</p>
+  <ul>
+    <li><i class="fas fa-check-circle"></i> Preventing over-fertilization, which can harm plants and the environment.</li>
+    <li><i class="fas fa-check-circle"></i> Ensuring your crops get the precise nutrients they need.</li>
+    <li><i class="fas fa-check-circle"></i> Saving costs by using only necessary fertilizers.</li>
+    <li><i class="fas fa-check-circle"></i> Promoting sustainable and efficient farming practices.</li>
+  </ul>
+  <div class="contact-info">
+    <p>Learn more about soil health: <a href="#">Soil Guide</a> or <a href="#">FAQ</a>.</p>
+  </div>
+</div>
+
 {% endblock %}
