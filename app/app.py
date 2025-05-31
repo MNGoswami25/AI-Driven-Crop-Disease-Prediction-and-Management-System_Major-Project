@@ -99,8 +99,55 @@ def weather_fetch(city_name):
     else:
         return None
 
-
 def predict_image(img, model=disease_model):
+    """
+    Predicts disease class and severity from image.
+    Returns: disease name, severity level
+    """
+    transform = transforms.Compose([
+        transforms.Resize((256, 256)),
+        transforms.ToTensor(),
+    ])
+    image = Image.open(io.BytesIO(img)).convert('RGB')
+    img_t = transform(image)
+    img_u = torch.unsqueeze(img_t, 0)
+
+    with torch.no_grad():
+        output = model(img_u)
+        probs = torch.softmax(output, dim=1)
+        conf, preds = torch.max(probs, dim=1)
+
+    prediction = disease_classes[preds.item()]
+    confidence = conf.item()
+
+    # Severity classification
+    if confidence >= 0.80:
+        severity = "High"
+    elif confidence >= 0.50:
+        severity = "Medium"
+    else:
+        severity = "Low"
+
+    return prediction, severity
+
+def is_plant_image(img):
+    """
+    Placeholder plant/not-plant check using color filter.
+    Replace with a CNN model later.
+    """
+    image = Image.open(io.BytesIO(img)).convert('RGB')
+    image = image.resize((64, 64))
+    np_img = np.array(image)
+
+    green_pixels = np.sum((np_img[:, :, 1] > 100) &
+                          (np_img[:, :, 1] > np_img[:, :, 0]) &
+                          (np_img[:, :, 1] > np_img[:, :, 2]))
+    total_pixels = 64 * 64
+
+    green_ratio = green_pixels / total_pixels
+    return green_ratio > 0.25  # You can tune this threshold
+
+'''def predict_image(img, model=disease_model):
     """
     Transforms image to tensor and predicts disease label
     :params: image
@@ -120,7 +167,7 @@ def predict_image(img, model=disease_model):
     _, preds = torch.max(yb, dim=1)
     prediction = disease_classes[preds[0].item()]
     # Retrieve the class label
-    return prediction
+    return prediction'''
 
 # ===============================================================================================
 # ------------------------------------ FLASK APP -------------------------------------------------
@@ -236,8 +283,38 @@ def fert_recommend():
 
 # render disease prediction result page
 
-
 @app.route('/disease-predict', methods=['GET', 'POST'])
+def disease_prediction():
+    title = 'Disease Detection'
+
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return render_template('disease.html', title=title)
+        file = request.files.get('file')
+        if not file:
+            return render_template('disease.html', title=title)
+
+        try:
+            img = file.read()
+
+            if not is_plant_image(img):
+                return render_template('disease-result.html',
+                                       prediction="⚠️ The uploaded image does not appear to be a plant. Please try again.")
+
+            disease, severity = predict_image(img)
+            description = disease_dic[disease]
+            full_output = f"<strong>Disease:</strong> {disease}<br><strong>Severity:</strong> {severity}<br><br>{description}"
+
+            return render_template('disease-result.html', prediction=Markup(full_output), title=title)
+        except Exception as e:
+            return render_template('disease-result.html',
+                                   prediction="⚠️ Something went wrong during prediction. Please try again.",
+                                   title=title)
+
+    return render_template('disease.html', title=title)
+
+
+'''@app.route('/disease-predict', methods=['GET', 'POST'])
 def disease_prediction():
     title = ' Disease Detection'
 
@@ -256,7 +333,7 @@ def disease_prediction():
             return render_template('disease-result.html', prediction=prediction, title=title)
         except:
             pass
-    return render_template('disease.html', title=title)
+    return render_template('disease.html', title=title)'''
 
 
 # ===============================================================================================
