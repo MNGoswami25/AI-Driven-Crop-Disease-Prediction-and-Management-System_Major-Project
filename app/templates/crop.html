@@ -71,7 +71,7 @@
   .form-control {
     display: block;
     width: 100%;
-    padding: 15px 20px;
+    padding: 20px 25px;
     margin-bottom: 25px; /* More space below input */
     font-size: 1rem;
     color: #495057;
@@ -284,11 +284,11 @@
     </div>
     <div class="form-group">
       <label for="sts"><i class="fas fa-map-marker-alt"></i> State</label>
-      <select onchange="print_city('state', this.selectedIndex);" id="sts" name="stt" class="form-control" required>
+      <select onchange="print_city('state', this.selectedIndex);" id="sts" name="stt" required  style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 0.5rem; background-color: #f9f9f9; color: #333; font-size: 1rem;">
         <option value="" disabled selected>Select State</option>
         </select>
       <br> <label for="state"><i class="fas fa-city"></i> City</label>
-      <select id="state" class="form-control" name="city" required>
+      <select id="state" name="city" required  style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 0.5rem; background-color: #f9f9f9; color: #333; font-size: 1rem;">
         <option value="" disabled selected>Select City</option>
         </select>
       <script language="javascript">
